@@ -4,7 +4,7 @@ Project based on gulp v4
 
 ## Installation
 
-* Node version must be 10.12+ (use nvm if necessary). [nvm](https://github.com/creationix/nvm)
+* Node version must be 11.11+ (use nvm if necessary). [nvm](https://github.com/creationix/nvm)
 * Install all packages
 ```bash
 npm -i
