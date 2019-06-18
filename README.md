@@ -37,3 +37,4 @@ npm i --save-dev #library-name
 ```
 Further required to add style files in **_libs.scss** or js files in **gulpfile.js**
 
+css-sprite mixin made css class with svg in base64 background

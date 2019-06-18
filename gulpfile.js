@@ -263,7 +263,7 @@ gulp.task('del', function (done) {
 
 gulp.task('watch', function () {
     gulp.watch('src/pug/**/*.pug', gulp.series('pug'));
-    gulp.watch('src/sass/**/*.scss', gulp.series('sass'));
+    gulp.watch(['src/sass/**/*.scss', 'src/pug/**/*.scss'], gulp.series('sass'));
     gulp.watch('src/js/**/*.js', gulp.series('scripts'));
     gulp.watch('src/img/**/*', gulp.series('img'));
     gulp.watch('src/upload/**/*', gulp.series('imgUpload'));
