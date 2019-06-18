@@ -46,7 +46,6 @@
   },
   "dependencies": {
     "@fancyapps/fancybox": "^3.5.7",
-    "blazy": "^1.8.2",
     "d": "^1.0.0",
     "gulp-replace": "^1.0.0",
     "imask": "^5.1.4",
