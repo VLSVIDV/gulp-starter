@@ -12,8 +12,8 @@
 //@import "global/sprite/css-sprite.css";
 
 @import "global/base";
-@import "global/header";
-@import "global/footer";
+@import "../pug/global/_header";
+@import "../pug/global/_footer";
 @import "global/typography";
 @import "global/container";
 @import "global/fonts";
