@@ -1,5 +1,5 @@
 # Project
-Project version v1.04
+Project version v1.05
 Project based on gulp v4
 
 ## Installation
