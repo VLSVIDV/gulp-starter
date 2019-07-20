@@ -9,7 +9,8 @@ var gulp = require('gulp'),
     gulpIf = require('gulp-if'),
     svgcss = require('gulp-svg-css'),
     pngquant = require('imagemin-pngquant'),
-    mozjpeg = require('imagemin-mozjpeg');
+    mozjpeg = require('imagemin-mozjpeg'),
+    strip = require('gulp-strip-comments');
 
 /////////////////////////////////////////////////
 //---------------------PUG---------------------//
@@ -28,6 +29,7 @@ gulp.task('pug', function () {
         .pipe(glp.pug({
             pretty: true
         }))
+        .pipe(strip())
         .pipe(gulp.dest('build/'))
         .on('end', browserSync.reload)
 });
@@ -85,6 +87,7 @@ gulp.task('scripts:libs', function () {
         ]
     )
     .pipe(glp.concat('libs.min.js'))
+    .pipe(strip())
     .pipe(gulp.dest('build/js/'))
     .pipe(browserSync.reload({
         stream: true
@@ -112,6 +115,7 @@ gulp.task('scripts', function () {
         .pipe(glp.rename({
             extname: '.min.js'
         }))
+        .pipe(strip())
         .pipe(gulp.dest('build/js/'))
         .pipe(browserSync.reload({
             stream: true

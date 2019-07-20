@@ -16,6 +16,8 @@ html {
   height: 100%;
   min-width: 300px;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  scroll-behavior: smooth;
+  scrollbar-color: $red $gray-dark; // for firefox
 }
 
 body {
@@ -28,6 +30,14 @@ body {
   display: flex;
   flex-flow: column;
   min-height: 100vh;
+  overflow-anchor: auto;
+
+  &::-webkit-scrollbar {
+    background-color: $gray-dark;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $red;
+  }
 }
 
 img,
@@ -39,6 +49,10 @@ video {
 input,
 textarea {
   -webkit-overflow-scrolling: touch;
+  &:focus {
+    outline: 0;
+    box-shadow: 0 0 0 2px #e4f1fd7a;
+  }
 }
 
 address {
@@ -67,9 +81,21 @@ input[type="number"]::-webkit-inner-spin-button {
 a {
   text-decoration: none;
   color: inherit;
+  &:focus {
+    outline: 0;
+    box-shadow: 0 0 0 2px #e4f1fd7a;
+  }
 }
 
 button {
   border: none;
   cursor: pointer;
+  &:focus {
+    outline: 0;
+    box-shadow: 0 0 0 2px #e4f1fd7a;
+  }
+}
+
+::selection {
+  background-color: #e4f1fd;
 }
