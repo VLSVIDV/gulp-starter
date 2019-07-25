@@ -201,6 +201,11 @@ gulp.task('clear', function () {
 gulp.task('svg', function () {
     return gulp.src('src/svg/*.svg')
         .pipe(glp.svgmin({
+            plugins: [{
+                cleanupNumericValues: {
+                    floatPrecision: 0
+                }
+            }],
             js2svg: {
                 pretty: true
             }
