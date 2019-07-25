@@ -49,9 +49,10 @@ gulp.task('sass', function () {
             })
         }))
         .pipe(glp.sass())
-        .pipe(glp.autoprefixer([
-            'last 10 versions'
-        ]))
+        .pipe(glp.autoprefixer({
+            browsers: ['last 10 versions'],
+            grid: "autoplace"
+        }))
         .pipe(gcmq())
         .pipe(glp.csscomb())
         .pipe(glp.csso({
