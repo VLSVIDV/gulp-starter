@@ -9,6 +9,9 @@
   "engines": {
     "node": ">=11.11.0"
   },
+  "browserslist": [
+    "last 4 version"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
