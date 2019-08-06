@@ -36,6 +36,7 @@ npm-debug.log
 testem.log
 /typings
 /psd
+/src/files/fontraw
 
 # e2e
 /e2e/*.js
