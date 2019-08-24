@@ -209,7 +209,7 @@ gulp.task('svg', function () {
         pretty: true
       }
     }))
-    .pipe(glp.cheerio({
+    /*.pipe(glp.cheerio({
       run: function ($) {
         // $('[fill]').removeAttr('fill');
         // $('[stroke]').removeAttr('stroke');
@@ -219,7 +219,7 @@ gulp.task('svg', function () {
       parserOptions: {
         xmlMode: false
       }
-    }))
+    }))*/
     .pipe(glp.replace('&gt;', '>'))
     .pipe(glp.svgSprite({
       mode: {
