@@ -50,7 +50,7 @@ gulp.task('sass', function () {
       })
     }))
     .pipe(glp.sass())
-    .pipe(glp.autoprefixer())
+    .pipe(glp.autoprefixer({grid: "autoplace"}))
     .pipe(gcmq())
     .pipe(glp.csscomb())
     .pipe(glp.csso({

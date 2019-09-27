@@ -10,7 +10,8 @@
     "node": ">=11.11.0"
   },
   "browserslist": [
-    "last 4 version"
+    "last 4 version",
+    "> 1%"
   ],
   "author": "",
   "license": "ISC",
