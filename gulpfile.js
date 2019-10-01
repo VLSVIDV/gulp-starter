@@ -199,7 +199,7 @@ gulp.task('clear', function () {
 
 gulp.task('svg', function () {
   return gulp.src('src/svg/*.svg')
-    .pipe(glp.svgmin({
+    /*.pipe(glp.svgmin({
       plugins: [{
         cleanupNumericValues: {
           floatPrecision: 0
@@ -209,7 +209,7 @@ gulp.task('svg', function () {
         pretty: true
       }
     }))
-    /*.pipe(glp.cheerio({
+    .pipe(glp.cheerio({
       run: function ($) {
         // $('[fill]').removeAttr('fill');
         // $('[stroke]').removeAttr('stroke');
@@ -251,7 +251,7 @@ gulp.task('svg:base', function () {
 //--------------------font-gen-----------------//
 /////////////////////////////////////////////////
 
-gulp.task('fontgen', function() {
+/*gulp.task('fontgen', function() {
   return gulp.src("src/files/fontraw/*.{ttf,otf,woff}")
     .pipe(fontgen({
     dest: "src/files/fonts"
@@ -259,7 +259,7 @@ gulp.task('fontgen', function() {
     .on('end', function() {
     del(['src/files/fonts/*.{svg,eot,css,ttf}']) // exclude this files files
     })
-  })
+  })*/
   
   /////////////////////////////////////////////////
   //--------------------COPY---------------------//
