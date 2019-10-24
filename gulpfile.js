@@ -10,7 +10,7 @@ var gulp = require('gulp'),
   svgcss = require('gulp-svg-css'),
   pngquant = require('imagemin-pngquant'),
   mozjpeg = require('imagemin-mozjpeg'),
-  strip = require('gulp-strip-comments'),
+  strip = require('gulp-strip-comments');
   //fontgen = require('gulp-fontgen');
 
 /////////////////////////////////////////////////
