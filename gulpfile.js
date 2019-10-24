@@ -11,7 +11,7 @@ var gulp = require('gulp'),
   pngquant = require('imagemin-pngquant'),
   mozjpeg = require('imagemin-mozjpeg'),
   strip = require('gulp-strip-comments'),
-  fontgen = require('gulp-fontgen');
+  //fontgen = require('gulp-fontgen');
 
 /////////////////////////////////////////////////
 //---------------------PUG---------------------//
