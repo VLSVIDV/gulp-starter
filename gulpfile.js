@@ -11,7 +11,8 @@ var gulp = require('gulp'),
   pngquant = require('imagemin-pngquant'),
   mozjpeg = require('imagemin-mozjpeg'),
   strip = require('gulp-strip-comments');
-  //fontgen = require('gulp-fontgen');
+  //rsync = require('gulp-rsync')
+  //fontgen = require('gulp-fontgen')
 
 /////////////////////////////////////////////////
 //---------------------PUG---------------------//
@@ -75,7 +76,7 @@ gulp.task('sass', function () {
 gulp.task('scripts:libs', function () {
   return gulp.src(
     [
-      'node_modules/jquery/dist/jquery.min.js',
+      //'node_modules/jquery/dist/jquery.min.js',
       'node_modules/object-fit-images/dist/ofi.min.js',
       'node_modules/svg4everybody/dist/svg4everybody.min.js',
       //'node_modules/jquery-validation/dist/jquery.validate.min.js',
@@ -261,14 +262,36 @@ gulp.task('svg:base', function () {
     })
   })*/
   
-  /////////////////////////////////////////////////
-  //--------------------COPY---------------------//
-  /////////////////////////////////////////////////
-  
-  gulp.task('copy', function () {
-  return gulp.src(['src/files/**/*', '!src/files/fontraw/**']) // exclude raw font file
-    .pipe(gulp.dest('build/'))
-  });
+
+/////////////////////////////////////////////////
+//---------------------FTP---------------------//
+/////////////////////////////////////////////////
+
+//gulp.task('deploy', function() {
+  //return gulp.src('build/**')
+  //.pipe(rsync({
+    //root: 'build/',
+    //hostname: 'zagainov@dev.ttcsoft.ru',
+    //port: 3722,
+    //destination: '/storage/www/ttcsoft/docs/dev.ttcsoft.ru/html/truetuning',
+    //include: ['*.htaccess'], // Includes files to deploy
+    //exclude: ['**/Thumbs.db','**/*.DS_Store'], // Excludes files from deploy
+    //recursive: true,
+    //archive: true,
+    //silent: false,
+    //compress: true
+  //}))
+//});
+
+
+/////////////////////////////////////////////////
+//--------------------COPY---------------------//
+/////////////////////////////////////////////////
+
+gulp.task('copy', function () {
+return gulp.src(['src/files/**/*', '!src/files/fontraw/**']) // exclude raw font file
+  .pipe(gulp.dest('build/'))
+});
 
 /////////////////////////////////////////////////reload
 //---------------------DEL---------------------//reload

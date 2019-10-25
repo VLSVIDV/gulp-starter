@@ -1,5 +1,5 @@
 # Project
-Project version v1.05
+Project version v1.1
 Project based on gulp v4
 
 ## Installation
@@ -29,11 +29,19 @@ Clear img cache
 ```bash
 gulp clear
 ```
+Convert fonts - fontgen (need to install fontgen on computer, maybe wont work on Windows/Mac)
+```bash
+gulp fontgen
+```
+Send to ftp (need to install rsync 'npm i rsync')
+```bash
+gulp deploy
+```
 ___
 
 Libraries are added by npm command. For example:
 ```bash
-npm i --save-dev #library-name
+npm i #library-name
 ```
 Further required to add style files in **_libs.scss** or js files in **gulpfile.js**
 
