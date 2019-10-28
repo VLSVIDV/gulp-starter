@@ -1,14 +1,11 @@
 html {
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
   -ms-overflow-style: scrollbar;
 }
 
 *,
 *::before,
 *::after {
-  -webkit-box-sizing: inherit;
-  box-sizing: inherit;
+  box-sizing: border-box;
 }
 
 html {
@@ -16,7 +13,6 @@ html {
   height: 100%;
   min-width: 300px;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  scroll-behavior: smooth;
   //scrollbar-color: $red $gray-dark; // for firefox
 }
 
@@ -31,6 +27,8 @@ body {
   flex-flow: column;
   min-height: 100vh;
   overflow-anchor: auto;
+  scroll-behavior: smooth;
+  text-rendering: auto; 
 
   /*&::-webkit-scrollbar {
     background-color: $gray-dark;
@@ -43,7 +41,7 @@ body {
 img,
 video {
   max-width: 100%;
-  height: auto;
+  display: block;
 }
 
 input,
@@ -85,6 +83,9 @@ a {
     outline: 0;
     box-shadow: 0 0 0 2px #e4f1fd7a;
   }
+  &:not([class]) {
+    text-decoration-skip-ink: auto;
+  }
 }
 
 button {
@@ -99,3 +100,13 @@ button {
 ::selection {
   background-color: #e4f1fd;
 }
+
+// media for users with vestibular disorders 
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+} 
