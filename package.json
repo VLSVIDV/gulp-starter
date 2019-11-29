@@ -47,11 +47,12 @@
     "gulp-svgmin": "^2.2.0",
     "gulp-uglify": "^3.0.2",
     "imagemin-mozjpeg": "^8.0.0",
-    "imagemin-pngquant": "^8.0.0"
+    "imagemin-pngquant": "^8.0.0",
+    "rebuild": "^0.1.2",
+    "d": "^1.0.1",
+    "gulp-replace": "^1.0.0"
   },
   "dependencies": {
-    "d": "^1.0.1",
-    "gulp-replace": "^1.0.0",
-    "rebuild": "^0.1.2"
+    "jquery": "^3.4.1"
   }
 }
