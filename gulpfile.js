@@ -228,13 +228,13 @@ gulp.task('svg', function () {
           render: {
             scss: {
               dest: "../_sprite.scss",
-              template: "src/sass/global/sprite/_sprite_template.scss"
+              template: "src/sass/global/helpers/sprite/_sprite_template.scss"
             }
           }
         }
       }
     }))
-    .pipe(gulpIf('*.scss', gulp.dest('./src/sass/global/sprite'), gulp.dest('./build/img/sprite')))
+    .pipe(gulpIf('*.scss', gulp.dest('./src/sass/global/helpers/sprite'), gulp.dest('./build/img/sprite')))
 });
 
 gulp.task('svg:base', function () {
