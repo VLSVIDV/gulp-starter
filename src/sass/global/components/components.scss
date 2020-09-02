@@ -1,3 +1,8 @@
+// import from pug
+@import "../pug/components/global/_header";
+@import "../pug/components/global/_footer";
+
+// other
 @import "buttons";
 @import "container";
-@import "modals/modals";
+@import "../pug/components/modals/_pages";
