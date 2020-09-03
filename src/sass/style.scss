@@ -1,13 +1,5 @@
-@import "global/libs/libs";
-
 @import "global/helpers/helpers";
-
-@import "global/mixins/mixins";
-
+@import "global/libs/libs";
 @import "global/components/components";
-
-//@import "global/sprite/css-sprite.css";
-
 @import "../pug/pages/ui/_ui"; //remove before prod
-
 @import "../pug/pages/index/_1-screen";

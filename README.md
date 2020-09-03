@@ -73,12 +73,14 @@ ___
       * _typography.scss - базовые настройки шрифтов
       * _variables.scss - все переменные scss записываем сюда
       * sprite - стили для автоматического сборщика спрайтов gulp.task('svg') . Ничего трогать там не надо
+      * mixins - миксины scss. Собираются в mixins.scss
+        * _clearfix.scss - для хака clearfix, если придется использовать float
+        * _fluid-type.scss - уменьшение шрифта при уменьшении контейнера. Подробнее: https://css-tricks.com/snippets/css/fluid-typography/
+        * _font-face.scss - миксин для font_face. Подробнее: https://gist.github.com/jonathantneal/d0460e5c2d5d7f9bc5e6
+        * _mediaquery.scss - очень полезный миксин для медиа-выражений. Пример можно посмотреть в sass/global/_container.scss
+        * _pseudo.scss - миксин для псевдоэлементов :before и :after
     * libs - здесь стили для библиотек, которые, по каким-то причинам, нельзя подключить из node_modules. Подключаем в libs.scss, там же подключем стили из node_modules
       * _libs.scss - подключаем стили библиотек из src/sass/global/libs
-    * mixins - миксины scss. Собираются в mixins.scss
-      * _clearfix.scss - для хака clearfix, если придется использовать float
-      * _fluid-type.scss - уменьшение шрифта при уменьшении контейнера. Подробнее: https://css-tricks.com/snippets/css/fluid-typography/
-      * _font-face.scss - миксин для font_face. Подробнее: https://gist.github.com/jonathantneal/d0460e5c2d5d7f9bc5e6
-      * _mediaquery.scss - очень полезный миксин для медиа-выражений. Пример можно посмотреть в sass/global/_container.scss
-      * _pseudo.scss - миксин для псевдоэлементов :before и :after
   * style.scss - собираем все вместе
+* svg - сюда кидаем svg, которые потом соберутся в спрайт таском gulp
+* upload - папка для динамического контента, который будет на сайте в будущем (из cms, например). То есть все картинки из новостей/статей/галерей кидаются сюда, а не в img. Бэкендеры скажут спасибо (наверное)
