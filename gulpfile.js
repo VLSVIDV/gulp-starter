@@ -1,205 +1,265 @@
-'use strict';
+"use strict";
 
-var gulp = require('gulp'),
-  gcmq = require('gulp-group-css-media-queries'),
-  browserSync = require('browser-sync').create(),
-  glp = require('gulp-load-plugins')(),
-  include = require('gulp-file-include'),
-  del = require('del'),
-  gulpIf = require('gulp-if'),
-  svgcss = require('gulp-svg-css'),
-  pngquant = require('imagemin-pngquant'),
-  mozjpeg = require('imagemin-mozjpeg'),
-  strip = require('gulp-strip-comments');
-  //rsync = require('gulp-rsync')
-  //fontgen = require('gulp-fontgen')
+const { task, src, dest, watch, series, parallel } = require("gulp"),
+  gcmq = require("gulp-group-css-media-queries"),
+  browserSync = require("browser-sync").create(),
+  glp = require("gulp-load-plugins")(),
+  include = require("gulp-file-include"),
+  del = require("del"),
+  gulpIf = require("gulp-if"),
+  svgcss = require("gulp-svg-css"),
+  pngquant = require("imagemin-pngquant"),
+  mozjpeg = require("imagemin-mozjpeg"),
+  strip = require("gulp-strip-comments");
+//rsync = require('gulp-rsync')
+//fontgen = require('gulp-fontgen')
 
 /////////////////////////////////////////////////
 //---------------------PUG---------------------//
 /////////////////////////////////////////////////
-
-gulp.task('pug', function () {
-  return gulp.src('src/pug/structure/**/*.pug')
-    .pipe(glp.plumber({
-      errorHandler: glp.notify.onError(function (err) {
-        return {
-          title: 'PUG error',
-          message: err.message
-        };
+function pug() {
+  return src("src/pug/structure/**/*.pug")
+    .pipe(
+      glp.plumber({
+        errorHandler: glp.notify.onError(function (err) {
+          return {
+            title: "PUG error",
+            message: err.message,
+          };
+        }),
       })
-    }))
-    .pipe(glp.pug({
-      pretty: true
-    }))
+    )
+    .pipe(
+      glp.pug({
+        pretty: true,
+      })
+    )
     .pipe(strip())
-    .pipe(gulp.dest('build/'))
-    .on('end', browserSync.reload)
-});
+    .pipe(dest("build/"))
+    .on("end", browserSync.reload);
+};
+
+task(pug); // this is in case of running "pug" as single task
 
 /////////////////////////////////////////////////
 //--------------------SASS---------------------//
 /////////////////////////////////////////////////
+function sass() {
+  return (
+    src("src/sass/style.scss")
+      .pipe(
+        glp.plumber({
+          errorHandler: glp.notify.onError(function (err) {
+            return {
+              title: "SASS error",
+              message: err.message,
+            };
+          }),
+        })
+      )
+      .pipe(glp.sass())
+      .pipe(glp.autoprefixer({ grid: "autoplace" }))
+      .pipe(gcmq())
+      .pipe(glp.csscomb())
+      .pipe(
+        glp.csso({
+          restructure: false,
+          sourceMap: true,
+          debug: true,
+        })
+      )
+      .pipe(
+        glp.rename({
+          extname: ".min.css",
+        })
+      )
+      //.pipe(glp.sourcemaps.write())
+      .pipe(dest("build/css"))
+      .pipe(
+        browserSync.reload({
+          stream: true,
+        })
+      )
+  );
+};
 
-gulp.task('sass', function () {
-  return gulp.src('src/sass/style.scss')
-    .pipe(glp.plumber({
-      errorHandler: glp.notify.onError(function (err) {
-        return {
-          title: 'SASS error',
-          message: err.message
-        };
-      })
-    }))
-    .pipe(glp.sass())
-    .pipe(glp.autoprefixer({grid: "autoplace"}))
-    .pipe(gcmq())
-    .pipe(glp.csscomb())
-    .pipe(glp.csso({
-      restructure: false,
-      sourceMap: true,
-      debug: true
-    }))
-    .pipe(glp.rename({
-      extname: '.min.css'
-    }))
-    //.pipe(glp.sourcemaps.write())
-    .pipe(gulp.dest('build/css'))
-    .pipe(browserSync.reload({
-      stream: true
-    }));
-});
+task(sass);
 
 /////////////////////////////////////////////////
 //-------------------SCRIPTS-------------------//
 /////////////////////////////////////////////////
 
-gulp.task('scripts:libs', function () {
-  return gulp.src(
-    [
-      'node_modules/jquery/dist/jquery.min.js',
-      //'node_modules/object-fit-images/dist/ofi.min.js',
-      //'node_modules/svg4everybody/dist/svg4everybody.min.js',
-      //'node_modules/jquery-validation/dist/jquery.validate.min.js',
-      //'node_modules/imask/dist/imask.min.js',
-      //'node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.js',
-      //'node_modules/blazy/blazy.min.js'
-    ]
-  )
-  .pipe(glp.concat('libs.min.js'))
-  .pipe(strip())
-  .pipe(gulp.dest('build/js/'))
-  .pipe(browserSync.reload({
-    stream: true
-  }));
-});
-
-gulp.task('scripts', function () {
-  return gulp.src('src/js/main.js')
-    .pipe(glp.plumber({
-      errorHandler: glp.notify.onError(function (err) {
-        return {
-          title: 'js:include',
-          message: err.message
-        };
-      })
-    }))
-    .pipe(include({
-      prefix: '@@',
-      basepath: '@file'
-    }))
-    .pipe(glp.babel({
-      presets: ['@babel/env']
-    }))
-    .pipe(glp.uglify())
-    .pipe(glp.rename({
-      extname: '.min.js'
-    }))
+function scripts_libs() {
+  return src([
+    "node_modules/jquery/dist/jquery.min.js",
+    //'node_modules/object-fit-images/dist/ofi.min.js',
+    //'node_modules/svg4everybody/dist/svg4everybody.min.js',
+    //'node_modules/jquery-validation/dist/jquery.validate.min.js',
+    //'node_modules/imask/dist/imask.min.js',
+    //'node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.js',
+    //'node_modules/blazy/blazy.min.js'
+  ])
+    .pipe(glp.concat("libs.min.js"))
     .pipe(strip())
-    .pipe(gulp.dest('build/js/'))
-    .pipe(browserSync.reload({
-      stream: true
-    }));
-});
+    .pipe(dest("build/js/"))
+    .pipe(
+      browserSync.reload({
+        stream: true,
+      })
+    );
+};
 
+task(scripts_libs);
+
+function scripts() {
+  return src("src/js/main.js")
+    .pipe(
+      glp.plumber({
+        errorHandler: glp.notify.onError(function (err) {
+          return {
+            title: "js:include",
+            message: err.message,
+          };
+        }),
+      })
+    )
+    .pipe(
+      include({
+        prefix: "@@",
+        basepath: "@file",
+      })
+    )
+    .pipe(
+      glp.babel({
+        presets: ["@babel/env"],
+      })
+    )
+    .pipe(glp.uglify())
+    .pipe(
+      glp.rename({
+        extname: ".min.js",
+      })
+    )
+    .pipe(strip())
+    .pipe(dest("build/js/"))
+    .pipe(
+      browserSync.reload({
+        stream: true,
+      })
+    );
+};
+
+task(scripts);
 
 /////////////////////////////////////////////////
 //---------------------IMG---------------------//
 /////////////////////////////////////////////////
+function img() {
+  return src("src/img/**/*")
+    .pipe(
+      glp.cache(
+        glp.imagemin({
+          interlaced: true,
+          progressive: true,
+          svgoPlugins: [
+            {
+              interlaced: true,
+            },
+            {
+              removeViewBox: false,
+            },
+            {
+              removeUselessStrokeAndFill: false,
+            },
+            {
+              cleanupIDs: false,
+            },
+          ],
+          use: [
+            pngquant([
+              {
+                quality: "65-80",
+              },
+            ]),
+          ],
+          use: [
+            mozjpeg([
+              {
+                progressive: true,
+                quality: 80,
+              },
+            ]),
+          ],
+        })
+      )
+    )
+    .pipe(dest("build/img"));
+};
 
-gulp.task('img', function () {
-  return gulp.src('src/img/**/*')
-    .pipe(glp.cache(glp.imagemin({
-      interlaced: true,
-      progressive: true,
-      svgoPlugins: [{
-        interlaced: true
-      },
-        {
-          removeViewBox: false
-        },
-        {
-          removeUselessStrokeAndFill: false
-        },
-        {
-          cleanupIDs: false
-        }
-      ],
-      use: [pngquant([{
-        quality: '65-80'
-      }])],
-      use: [mozjpeg([{
-        progressive: true,
-        quality: 80
-      }])]
-    })))
-    .pipe(gulp.dest('build/img'))
-});
+task(img);
 
-gulp.task('imgUpload', function () {
-  return gulp.src('src/upload/**/*')
-    .pipe(glp.cache(glp.imagemin({
-      interlaced: true,
-      progressive: true,
-      svgoPlugins: [{
-        interlaced: true
-      },
-        {
-          removeViewBox: false
-        },
-        {
-          removeUselessStrokeAndFill: false
-        },
-        {
-          cleanupIDs: false
-        }
-      ],
-      use: [pngquant([{
-        quality: '65-80'
-      }])],
-      use: [mozjpeg([{
-        progressive: true,
-        quality: 80
-      }])]
-    })))
-    .pipe(gulp.dest('build/upload'))
-});
+function imgUpload() {
+  return src("src/upload/**/*")
+    .pipe(
+      glp.cache(
+        glp.imagemin({
+          interlaced: true,
+          progressive: true,
+          svgoPlugins: [
+            {
+              interlaced: true,
+            },
+            {
+              removeViewBox: false,
+            },
+            {
+              removeUselessStrokeAndFill: false,
+            },
+            {
+              cleanupIDs: false,
+            },
+          ],
+          use: [
+            pngquant([
+              {
+                quality: "65-80",
+              },
+            ]),
+          ],
+          use: [
+            mozjpeg([
+              {
+                progressive: true,
+                quality: 80,
+              },
+            ]),
+          ],
+        })
+      )
+    )
+    .pipe(dest("build/upload"));
+};
 
+task(imgUpload);
 
 /////////////////////////////////////////////////
 //-----------------CLEAR CACHE-----------------//
 /////////////////////////////////////////////////
 
-gulp.task('clear', function () {
+function clear() {
   return glp.cache.clearAll();
-});
+};
+
+task(clear);
 
 /////////////////////////////////////////////////
 //---------------------SVG---------------------//
 /////////////////////////////////////////////////
 
-gulp.task('svg', function () {
-  return gulp.src('src/svg/*.svg')
-    /*.pipe(glp.svgmin({
+function svg() {
+  return (
+    src("src/svg/*.svg")
+      /*.pipe(glp.svgmin({
       plugins: [{
         cleanupNumericValues: {
           floatPrecision: 0
@@ -220,126 +280,160 @@ gulp.task('svg', function () {
         xmlMode: false
       }
     }))*/
-    .pipe(glp.replace('&gt;', '>'))
-    .pipe(glp.svgSprite({
-      mode: {
-        symbol: {
-          sprite: "../sprite.svg",
-          render: {
-            scss: {
-              dest: "../_sprite.scss",
-              template: "src/sass/global/helpers/sprite/_sprite_template.scss"
-            }
-          }
-        }
-      }
-    }))
-    .pipe(gulpIf('*.scss', gulp.dest('./src/sass/global/helpers/sprite'), gulp.dest('./build/img/sprite')))
-});
+      .pipe(glp.replace("&gt;", ">"))
+      .pipe(
+        glp.svgSprite({
+          mode: {
+            symbol: {
+              sprite: "../sprite.svg",
+              render: {
+                scss: {
+                  dest: "../_sprite.scss",
+                  template:
+                    "src/sass/global/helpers/sprite/_sprite_template.scss",
+                },
+              },
+            },
+          },
+        })
+      )
+      .pipe(
+        gulpIf(
+          "*.scss",
+          dest("./src/sass/global/helpers/sprite"),
+          dest("./build/img/sprite")
+        )
+      )
+  );
+};
 
-gulp.task('svg:base', function () {
-  return gulp.src('src/svg/*.svg')
-    .pipe(svgcss({
-      fileName: 'css-sprite',
-      cssPrefix: 'icon-',
-      addSize: false
-    }))
-    .pipe(gulp.dest('src/sass/global/sprite'));
-});
+task(svg);
+
+function svg_base() {
+  return src("src/svg/*.svg")
+    .pipe(
+      svgcss({
+        fileName: "css-sprite",
+        cssPrefix: "icon-",
+        addSize: false,
+      })
+    )
+    .pipe(dest("src/sass/global/sprite"));
+};
+
+task(svg_base);
 
 /////////////////////////////////////////////////
 //--------------------font-gen-----------------//
 /////////////////////////////////////////////////
 
-/*gulp.task('fontgen', function() {
-  return gulp.src("src/files/fontraw/*.{ttf,otf,woff}")
+/*function fontgen() {
+  return src("src/files/fontraw/*.{ttf,otf,woff}")
     .pipe(fontgen({
     dest: "src/files/fonts"
     }))
     .on('end', function() {
     del(['src/files/fonts/*.{svg,eot,css,ttf}']) // exclude this files files
     })
-  })*/
-  
+  };
+
+task(fontgen);*/
 
 /////////////////////////////////////////////////
 //---------------------FTP---------------------//
 /////////////////////////////////////////////////
 
-//gulp.task('deploy', function() {
-  //return gulp.src('build/**')
-  //.pipe(rsync({
-    //root: 'build/',
-    //hostname: 'zagainov@dev.ttcsoft.ru',
-    //port: 3722,
-    //destination: '/storage/www/ttcsoft/docs/dev.ttcsoft.ru/html/truetuning',
-    //include: ['*.htaccess'], // Includes files to deploy
-    //exclude: ['**/Thumbs.db','**/*.DS_Store'], // Excludes files from deploy
-    //recursive: true,
-    //archive: true,
-    //silent: false,
-    //compress: true
-  //}))
-//});
+//function deploy() {
+//return src('build/**')
+//.pipe(rsync({
+//root: 'build/',
+//hostname: 'zagainov@dev.ttcsoft.ru',
+//port: 3722,
+//destination: '/storage/www/ttcsoft/docs/dev.ttcsoft.ru/html/truetuning',
+//include: ['*.htaccess'], // Includes files to deploy
+//exclude: ['**/Thumbs.db','**/*.DS_Store'], // Excludes files from deploy
+//recursive: true,
+//archive: true,
+//silent: false,
+//compress: true
+//}))
+//};
 
+//task(deploy);
 
 /////////////////////////////////////////////////
 //--------------------COPY---------------------//
 /////////////////////////////////////////////////
 
-gulp.task('copy', function () {
-return gulp.src(['src/files/**/*', '!src/files/fontraw/**']) // exclude raw font file
-  .pipe(gulp.dest('build/'))
-});
+function copy() {
+  return src(["src/files/**/*", "!src/files/fontraw/**"]) // exclude raw font file
+    .pipe(dest("build/"));
+};
 
-/////////////////////////////////////////////////reload
-//---------------------DEL---------------------//reload
+task(copy);
+
+/////////////////////////////////////////////////
+//---------------------DEL---------------------//
 /////////////////////////////////////////////////
 
-gulp.task('del', function (done) {
+function remove(done) {
   del("build");
   done();
-});
+};
+
+task(remove);
 
 /////////////////////////////////////////////////
 //--------------------WATCH--------------------//
 /////////////////////////////////////////////////
 
-gulp.task('watch', function () {
-  gulp.watch('src/pug/**/*.pug', gulp.series('pug'));
-  gulp.watch(['src/sass/**/*.scss', 'src/pug/**/*.scss'], gulp.series('sass'));
-  gulp.watch('src/js/**/*.js', gulp.series('scripts'));
-  gulp.watch('src/img/**/*', gulp.series('img'));
-  gulp.watch('src/upload/**/*', gulp.series('imgUpload'));
-  gulp.watch('src/svg/**/*.svg', gulp.series('svg'));
-});
+function observe() {
+  watch("src/pug/**/*.pug", series("pug"));
+  watch(["src/sass/**/*.scss", "src/pug/**/*.scss"], series("sass"));
+  watch("src/js/**/*.js", series("scripts"));
+  watch("src/img/**/*", series("img"));
+  watch("src/upload/**/*", series("imgUpload"));
+  watch("src/svg/**/*.svg", series("svg"));
+};
+
+task(observe);
 
 /////////////////////////////////////////////////
 //--------------------SERVE--------------------//
 /////////////////////////////////////////////////
 
-gulp.task('serve', function () {
+function serve() {
   browserSync.init({
     server: {
-      baseDir: "./build"
-    }
+      baseDir: "./build",
+    },
   });
-});
+};
+
+task(serve);
 
 /////////////////////////////////////////////////
 //-------------------DEFAULT-------------------//
 /////////////////////////////////////////////////
 
-gulp.task('default', gulp.series(
-  gulp.parallel('copy', 'img', 'imgUpload', 'svg'),
-  gulp.parallel('pug', 'scripts:libs', 'scripts', 'sass'),
-  gulp.parallel('watch', 'serve')
-));
+task(
+  "default",
+  series(
+    parallel(copy, img, imgUpload, svg),
+    parallel(pug, scripts_libs, scripts, sass),
+    parallel(observe, serve)
+  )
+);
 
 /////////////////////////////////////////////////
 //--------------------BUILD--------------------//
 /////////////////////////////////////////////////
 
-gulp.task('build', gulp.series(
-  ['copy', 'img', 'imgUpload', 'svg', 'pug', 'sass', 'scripts:libs', 'scripts']
-));
+task(
+  "build",
+  series(
+    remove,
+    parallel(copy, img, imgUpload, svg),
+    parallel(pug, scripts_libs, scripts, sass)
+  )
+);
