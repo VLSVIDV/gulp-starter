@@ -39,7 +39,7 @@ function pug() {
     .on("end", browserSync.reload);
 };
 
-task(pug); // this is in case of running "pug" as single task
+exports.pug = pug; // this is in case of running "pug" as single task. It was task(pug) in gulp 3
 
 /////////////////////////////////////////////////
 //--------------------SASS---------------------//
@@ -83,7 +83,7 @@ function sass() {
   );
 };
 
-task(sass);
+exports.sass = sass;
 
 /////////////////////////////////////////////////
 //-------------------SCRIPTS-------------------//
@@ -109,7 +109,7 @@ function scripts_libs() {
     );
 };
 
-task(scripts_libs);
+exports.scripts_libs = scripts_libs;
 
 function scripts() {
   return src("src/js/main.js")
@@ -149,7 +149,7 @@ function scripts() {
     );
 };
 
-task(scripts);
+exports.scripts = scripts;
 
 /////////////////////////////////////////////////
 //---------------------IMG---------------------//
@@ -196,7 +196,7 @@ function img() {
     .pipe(dest("build/img"));
 };
 
-task(img);
+exports.img = img;
 
 function imgUpload() {
   return src("src/upload/**/*")
@@ -240,7 +240,7 @@ function imgUpload() {
     .pipe(dest("build/upload"));
 };
 
-task(imgUpload);
+exports.imgUpload = imgUpload;
 
 /////////////////////////////////////////////////
 //-----------------CLEAR CACHE-----------------//
@@ -250,7 +250,7 @@ function clear() {
   return glp.cache.clearAll();
 };
 
-task(clear);
+exports.clear = clear;
 
 /////////////////////////////////////////////////
 //---------------------SVG---------------------//
@@ -307,7 +307,7 @@ function svg() {
   );
 };
 
-task(svg);
+exports.svg = svg;
 
 function svg_base() {
   return src("src/svg/*.svg")
@@ -321,7 +321,7 @@ function svg_base() {
     .pipe(dest("src/sass/global/sprite"));
 };
 
-task(svg_base);
+exports.svg_base = svg_base;
 
 /////////////////////////////////////////////////
 //--------------------font-gen-----------------//
@@ -337,7 +337,8 @@ task(svg_base);
     })
   };
 
-task(fontgen);*/
+exports.fontgen = fontgen;
+*/
 
 /////////////////////////////////////////////////
 //---------------------FTP---------------------//
@@ -359,7 +360,7 @@ task(fontgen);*/
 //}))
 //};
 
-//task(deploy);
+//exports.deploy = deploy;
 
 /////////////////////////////////////////////////
 //--------------------COPY---------------------//
@@ -370,7 +371,7 @@ function copy() {
     .pipe(dest("build/"));
 };
 
-task(copy);
+//exports.copy = copy;
 
 /////////////////////////////////////////////////
 //---------------------DEL---------------------//
@@ -381,7 +382,7 @@ function remove(done) {
   done();
 };
 
-task(remove);
+exports.remove = remove;
 
 /////////////////////////////////////////////////
 //--------------------WATCH--------------------//
@@ -396,7 +397,7 @@ function observe() {
   watch("src/svg/**/*.svg", series("svg"));
 };
 
-task(observe);
+exports.observe = observe;
 
 /////////////////////////////////////////////////
 //--------------------SERVE--------------------//
@@ -410,30 +411,25 @@ function serve() {
   });
 };
 
-task(serve);
+exports.serve = serve;
 
 /////////////////////////////////////////////////
 //-------------------DEFAULT-------------------//
 /////////////////////////////////////////////////
 
-task(
-  "default",
-  series(
-    parallel(copy, img, imgUpload, svg),
-    parallel(pug, scripts_libs, scripts, sass),
-    parallel(observe, serve)
-  )
+exports.default = series(
+  parallel(copy, img, imgUpload, svg),
+  parallel(pug, scripts_libs, scripts, sass),
+  parallel(observe, serve)
 );
 
 /////////////////////////////////////////////////
 //--------------------BUILD--------------------//
 /////////////////////////////////////////////////
 
-task(
-  "build",
-  series(
-    remove,
-    parallel(copy, img, imgUpload, svg),
-    parallel(pug, scripts_libs, scripts, sass)
-  )
+exports.build = series(
+  remove,
+  parallel(copy, img, imgUpload, svg),
+  parallel(pug, scripts_libs, scripts, sass)
 );
+
