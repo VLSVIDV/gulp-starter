@@ -35,15 +35,16 @@ function pug() {
       })
     )
     .pipe(strip())
-    .pipe(dest("build/"))
+    .pipe(dest("dist/"))
     .on("end", browserSync.reload);
-};
+}
 
 exports.pug = pug; // this is in case of running "pug" as single task. It was task(pug) in gulp 3
 
 /////////////////////////////////////////////////
 //--------------------SASS---------------------//
 /////////////////////////////////////////////////
+
 function sass() {
   return (
     src("src/sass/style.scss")
@@ -74,14 +75,14 @@ function sass() {
         })
       )
       //.pipe(glp.sourcemaps.write())
-      .pipe(dest("build/css"))
+      .pipe(dest("dist/css"))
       .pipe(
         browserSync.reload({
           stream: true,
         })
       )
   );
-};
+}
 
 exports.sass = sass;
 
@@ -89,7 +90,7 @@ exports.sass = sass;
 //-------------------SCRIPTS-------------------//
 /////////////////////////////////////////////////
 
-function scripts_libs() {
+function scriptsLibs() {
   return src([
     "node_modules/jquery/dist/jquery.min.js",
     //'node_modules/object-fit-images/dist/ofi.min.js',
@@ -101,15 +102,15 @@ function scripts_libs() {
   ])
     .pipe(glp.concat("libs.min.js"))
     .pipe(strip())
-    .pipe(dest("build/js/"))
+    .pipe(dest("dist/js/"))
     .pipe(
       browserSync.reload({
         stream: true,
       })
     );
-};
+}
 
-exports.scripts_libs = scripts_libs;
+exports.scriptsLibs = scriptsLibs;
 
 function scripts() {
   return src("src/js/main.js")
@@ -141,19 +142,21 @@ function scripts() {
       })
     )
     .pipe(strip())
-    .pipe(dest("build/js/"))
+    .pipe(dest("dist/js/"))
     .pipe(
       browserSync.reload({
         stream: true,
       })
     );
-};
+}
 
 exports.scripts = scripts;
 
 /////////////////////////////////////////////////
 //---------------------IMG---------------------//
 /////////////////////////////////////////////////
+
+// can't dry this functions
 function img() {
   return src("src/img/**/*")
     .pipe(
@@ -193,7 +196,7 @@ function img() {
         })
       )
     )
-    .pipe(dest("build/img"));
+    .pipe(dest("dist/img"));
 };
 
 exports.img = img;
@@ -237,20 +240,10 @@ function imgUpload() {
         })
       )
     )
-    .pipe(dest("build/upload"));
+    .pipe(dest("dist/upload"));
 };
 
 exports.imgUpload = imgUpload;
-
-/////////////////////////////////////////////////
-//-----------------CLEAR CACHE-----------------//
-/////////////////////////////////////////////////
-
-function clear() {
-  return glp.cache.clearAll();
-};
-
-exports.clear = clear;
 
 /////////////////////////////////////////////////
 //---------------------SVG---------------------//
@@ -301,15 +294,15 @@ function svg() {
         gulpIf(
           "*.scss",
           dest("./src/sass/global/helpers/sprite"),
-          dest("./build/img/sprite")
+          dest("./dist/img/sprite")
         )
       )
   );
-};
+}
 
 exports.svg = svg;
 
-function svg_base() {
+/*function svg_base() {
   return src("src/svg/*.svg")
     .pipe(
       svgcss({
@@ -321,7 +314,7 @@ function svg_base() {
     .pipe(dest("src/sass/global/sprite"));
 };
 
-exports.svg_base = svg_base;
+exports.svg_base = svg_base;*/
 
 /////////////////////////////////////////////////
 //--------------------font-gen-----------------//
@@ -345,12 +338,12 @@ exports.fontgen = fontgen;
 /////////////////////////////////////////////////
 
 //function deploy() {
-//return src('build/**')
+//return src('dist/**')
 //.pipe(rsync({
-//root: 'build/',
-//hostname: 'zagainov@dev.ttcsoft.ru',
+//root: 'dist/',
+//hostname: 'user@server.ru',
 //port: 3722,
-//destination: '/storage/www/ttcsoft/docs/dev.ttcsoft.ru/html/truetuning',
+//destination: '/storage/megaproject',
 //include: ['*.htaccess'], // Includes files to deploy
 //exclude: ['**/Thumbs.db','**/*.DS_Store'], // Excludes files from deploy
 //recursive: true,
@@ -368,8 +361,8 @@ exports.fontgen = fontgen;
 
 function copy() {
   return src(["src/files/**/*", "!src/files/fontraw/**"]) // exclude raw font file
-    .pipe(dest("build/"));
-};
+    .pipe(dest("dist/"));
+}
 
 //exports.copy = copy;
 
@@ -377,25 +370,35 @@ function copy() {
 //---------------------DEL---------------------//
 /////////////////////////////////////////////////
 
-function remove(done) {
-  del("build");
+function clear(done) {
+  del("dist");
   done();
-};
+}
 
-exports.remove = remove;
+exports.clear = clear;
+
+/////////////////////////////////////////////////
+//-----------------CLEAR CACHE-----------------//
+/////////////////////////////////////////////////
+
+function clearCache() {
+  return glp.cache.clearAll();
+}
+
+exports.clearCache = clearCache;
 
 /////////////////////////////////////////////////
 //--------------------WATCH--------------------//
 /////////////////////////////////////////////////
 
 function observe() {
-  watch("src/pug/**/*.pug", series("pug"));
-  watch(["src/sass/**/*.scss", "src/pug/**/*.scss"], series("sass"));
-  watch("src/js/**/*.js", series("scripts"));
-  watch("src/img/**/*", series("img"));
-  watch("src/upload/**/*", series("imgUpload"));
-  watch("src/svg/**/*.svg", series("svg"));
-};
+  watch("src/pug/**/*.pug", series(pug));
+  watch(["src/sass/**/*.scss", "src/pug/**/*.scss"], series(sass));
+  watch("src/js/**/*.js", series(scripts));
+  watch("src/img/**/*", series(img));
+  watch("src/upload/**/*", series(imgUpload));
+  watch("src/svg/**/*.svg", series(svg));
+}
 
 exports.observe = observe;
 
@@ -406,10 +409,10 @@ exports.observe = observe;
 function serve() {
   browserSync.init({
     server: {
-      baseDir: "./build",
+      baseDir: "./dist",
     },
   });
-};
+}
 
 exports.serve = serve;
 
@@ -419,7 +422,7 @@ exports.serve = serve;
 
 exports.default = series(
   parallel(copy, img, imgUpload, svg),
-  parallel(pug, scripts_libs, scripts, sass),
+  parallel(pug, scriptsLibs, scripts, sass),
   parallel(observe, serve)
 );
 
@@ -428,8 +431,7 @@ exports.default = series(
 /////////////////////////////////////////////////
 
 exports.build = series(
-  remove,
+  clear,
   parallel(copy, img, imgUpload, svg),
-  parallel(pug, scripts_libs, scripts, sass)
+  parallel(pug, scriptsLibs, scripts, sass)
 );
-
