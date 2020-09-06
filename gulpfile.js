@@ -19,7 +19,8 @@ const { task, src, dest, watch, series, parallel } = require("gulp"),
 /////////////////////////////////////////////////
 function pug() {
   return src("src/pug/structure/**/*.pug")
-    .pipe(
+    // install gulp-plumber and gulp-notify if you want to see beautiful errors in console
+  /*.pipe(
       glp.plumber({
         errorHandler: glp.notify.onError(function (err) {
           return {
@@ -28,7 +29,7 @@ function pug() {
           };
         }),
       })
-    )
+    )*/
     .pipe(
       glp.pug({
         pretty: true,
@@ -48,20 +49,9 @@ exports.pug = pug; // this is in case of running "pug" as single task. It was ta
 function sass() {
   return (
     src("src/sass/style.scss")
-      .pipe(
-        glp.plumber({
-          errorHandler: glp.notify.onError(function (err) {
-            return {
-              title: "SASS error",
-              message: err.message,
-            };
-          }),
-        })
-      )
       .pipe(glp.sass())
       .pipe(glp.autoprefixer({ grid: "autoplace" }))
       .pipe(gcmq())
-      .pipe(glp.csscomb())
       .pipe(
         glp.csso({
           restructure: false,
@@ -114,16 +104,6 @@ exports.scriptsLibs = scriptsLibs;
 
 function scripts() {
   return src("src/js/main.js")
-    .pipe(
-      glp.plumber({
-        errorHandler: glp.notify.onError(function (err) {
-          return {
-            title: "js:include",
-            message: err.message,
-          };
-        }),
-      })
-    )
     .pipe(
       include({
         prefix: "@@",
@@ -252,6 +232,7 @@ exports.imgUpload = imgUpload;
 function svg() {
   return (
     src("src/svg/*.svg")
+      // install gulp-cheerio if you need this task. be careful - it can remove defs from svg
       /*.pipe(glp.svgmin({
       plugins: [{
         cleanupNumericValues: {
