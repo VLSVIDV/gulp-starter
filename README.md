@@ -1,10 +1,10 @@
 # Project
-Project version v1.1
+Project version v2
 Project based on gulp v4
 
 ## Installation
 
-* Node version must be 11.11+ (use nvm if necessary). [nvm](https://github.com/creationix/nvm)
+* Node version must be 12.14+ (use nvm if necessary). [nvm](https://github.com/creationix/nvm). Or just read console if you get error (mostly it'll be node-sass. Just rebuild it)
 * Install all packages
 ```bash
 npm -i
@@ -21,13 +21,13 @@ Build project
 ```bash
 gulp build
 ```
-Remove build folder
+Remove dist folder
 ```bash
-gulp del
+gulp clear
 ```
 Clear img cache
 ```bash
-gulp clear
+gulp clearCache
 ```
 Convert fonts - fontgen (need to install fontgen on computer, maybe wont work on Windows/Mac)
 ```bash
@@ -43,10 +43,6 @@ Libraries are added by npm command. For example:
 ```bash
 npm i #library-name
 ```
-Further required to add style files in **_libs.scss** or js files in **gulpfile.js**
-
-css-sprite mixin made css class with svg in base64 background
-
 ___
 
 ## Структура проекта
